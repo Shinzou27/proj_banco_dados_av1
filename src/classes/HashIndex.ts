@@ -38,9 +38,9 @@ class HashIndex {
 
   displayBuckets(): void {
     this.buckets.forEach((bucket, key) => {
-      console.log(`Bucket ${key}:`);
+      // console.log(`Bucket ${key}:`);
       bucket.entries.forEach((pageId, word) => {
-        console.table(`  - Palavra: '${word}' | Página: ${pageId}`);
+        // console.table(`  - Palavra: '${word}' | Página: ${pageId}`);
       });
     });
   }

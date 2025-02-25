@@ -4,8 +4,16 @@ import { main } from "./main";
 const app = express();
 const PORT = 3000;
 
-app.get("/", (req, res) => {
-    main()
+app.get("/", async(req, res) => {
+    try{
+        const searchWord = req.query.searchWord as string
+        const result = await main(searchWord)
+
+        res.send(result)
+    }catch(err){
+        console.log(err)
+        res.status(500).send("Erro Interno")
+    }
   res.send();
 });
 

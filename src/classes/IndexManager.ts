@@ -46,7 +46,7 @@ class IndexManager {
       });
     }
   
-    console.log(`Páginas carregadas: ${this.pages.length}`);
+    // console.log(`Páginas carregadas: ${this.pages.length}`);
     // this.displayPages();
   }
   
@@ -71,6 +71,38 @@ class IndexManager {
         console.error("Erro ao carregar o arquivo:", error);
         return [];
      }
+  }
+
+  tableScan(searchWord: string): { 
+    pageFound: number | null, 
+    pagesScanned: number, 
+    pagesRead: { pageNumber: number, content: string[] }[], 
+    timeElapsed: number 
+  } {
+    const startTime = performance.now();
+    let pagesScanned = 0;
+    let pagesRead: { pageNumber: number, content: string[] }[] = [];
+    let pageFound: number | null = null;
+
+    for (const page of this.pages) {
+        pagesScanned++;
+        pagesRead.push({ pageNumber: page.pageNumber, content: page.words });
+
+        if (page.words.includes(searchWord)) {
+            pageFound = page.pageNumber;
+            break;
+        }
+    }
+
+    const endTime = performance.now();
+    const timeElapsed = endTime - startTime; 
+
+    return { 
+        pageFound, 
+        pagesScanned, 
+        timeElapsed, 
+        pagesRead
+    };
   }
 
   displayPages(): void {
