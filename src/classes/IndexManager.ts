@@ -112,6 +112,13 @@ class IndexManager {
     };
   }
 
+  getFirstAndLastPage(): { firstPage: Page | null; lastPage: Page | null } {
+    return {
+      firstPage: this.pages.length > 0 ? this.pages[0] : null,
+      lastPage: this.pages.length > 0 ? this.pages[this.pages.length - 1] : null
+    };
+  }
+
   displayPages(): void {
     // this.pages.forEach(page => {
     //   console.log(`Página ${page.pageNumber}: ${page.words.join(', ')}`);

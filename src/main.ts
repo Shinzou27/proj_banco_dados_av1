@@ -16,6 +16,8 @@ async function main(pageSize: number, searchWord?: string) {
 
   indexManager.buildIndex();
 
+  const { firstPage, lastPage } = indexManager.getFirstAndLastPage();
+
   const collisionRate = (indexManager.numCollisions / 466000) * 100;
   const overflowRate = (indexManager.numOverflows / 466000) * 100;
 
@@ -26,6 +28,8 @@ async function main(pageSize: number, searchWord?: string) {
   console.log(`Resultado do Table Scan:`, tableScanResult);
 
   return {
+    firstPage: firstPage ? { pageNumber: firstPage.pageNumber, content: firstPage.words } : null,
+    lastPage: lastPage ? { pageNumber: lastPage.pageNumber, content: lastPage.words } : null,
     collisionRate,
     overflowRate,
     tableScanResult,
