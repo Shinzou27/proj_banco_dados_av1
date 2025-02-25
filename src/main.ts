@@ -1,27 +1,37 @@
+import path from "path";
 import { IndexManager } from "./classes/IndexManager";
 
-async function main(searchWord: string){
-    const pagesSize = 2 //receber do front
-    const bucketSize = 5
-    const amountBuckets = 466000/bucketSize //consertar pra calcular com o tamanho do arquivo sozinho
+async function main(pageSize: number, searchWord?: string) {
+  const bucketSize = 42;
+  const amountBuckets = Math.ceil(466000 / bucketSize); //consertar pra calcular com o tamanho do arquivo sozinho
 
-    const indexManager = new IndexManager('src\public\words.txt', pagesSize, amountBuckets, bucketSize); 
-    
-    await indexManager.loadFile(); 
-    
-    indexManager.buildIndex(); 
+  const indexManager = new IndexManager(
+    path.join("src", "public", "words.txt"),
+    pageSize,
+    amountBuckets,
+    bucketSize
+  );
 
-    indexManager.displayIndex();
+  await indexManager.loadFile();
 
-    //Logica table scan
-    console.log(`Iniciando Table Scan para a palavra: '${searchWord}'`);
-    const result = indexManager.tableScan(searchWord);
+  indexManager.buildIndex();
 
-    console.log(`Resultado do Table Scan:`, result);
-    return result;
-  }
-  
-  // main().catch(err => console.error(err));
-  
+  const collisionRate = (indexManager.numCollisions / 466000) * 100;
+  const overflowRate = (indexManager.numOverflows / 466000) * 100;
 
-export {main}
+  //indexManager.displayIndex();
+
+  // Logica table scan
+  let tableScanResult = searchWord ? indexManager.tableScan(searchWord!) : null;
+  console.log(`Resultado do Table Scan:`, tableScanResult);
+
+  return {
+    collisionRate,
+    overflowRate,
+    tableScanResult,
+  };
+}
+
+// main().catch(err => console.error(err));
+
+export { main };

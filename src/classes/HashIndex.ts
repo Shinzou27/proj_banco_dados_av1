@@ -22,17 +22,15 @@ class HashIndex {
     return hashValue;
   }
 
-  storeInBucket(key: string, pageNumber: number): void {
+  storeInBucket(key: string, pageNumber: number): { collision: 0 | 1, overflow: 0 | 1 } {
     const hashValue = this.hash(key);
     const bucket = this.buckets.get(hashValue);
 
     if (bucket) {
-      const added = bucket.addEntry(key, pageNumber); // Tenta adicionar a palavra ao Bucket
-      if (!added) {
-        // console.log(`Bucket ${hashValue} cheio, não foi possível adicionar '${key}'`);
-      } else {
-        // console.log(`Palavra '${key}' adicionada ao Bucket ${hashValue}, Página ${pageNumber}`);
-      }
+      const status = bucket.addEntry(key, pageNumber); // Adiciona a palavra ao Bucket
+      return status;
+    } else {
+      throw new Error(`Bucket não encontrado para a chave ${key}`);
     }
   }
 

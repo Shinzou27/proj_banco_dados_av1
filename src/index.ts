@@ -6,8 +6,9 @@ const PORT = 3000;
 
 app.get("/", async(req, res) => {
     try{
+        const pageSize = req.query.pageSize as string
         const searchWord = req.query.searchWord as string
-        const result = await main(searchWord)
+        const result = await main(Number(pageSize || 10), searchWord)
 
         res.send(result)
     }catch(err){

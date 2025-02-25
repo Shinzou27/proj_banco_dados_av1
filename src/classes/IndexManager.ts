@@ -9,6 +9,9 @@ class IndexManager {
   private hashIndex: HashIndex;
   private outputStream: fs.WriteStream;  // Usando um stream para saída
 
+  public numCollisions: number = 0;
+  public numOverflows: number = 0;
+
   constructor(private filePath: string, private pageSize: number, numberOfBuckets: number, maxBucketSize: number) {
     this.hashIndex = new HashIndex(numberOfBuckets, maxBucketSize); 
     this.outputStream = fs.createWriteStream("src/public/words-pages.txt", { flags: 'a' }); 
@@ -32,18 +35,22 @@ class IndexManager {
       }
   
       // Salva a relação palavra-página e adiciona ao índice no mesmo momento
-      this.saveWordPageRelation(word, this.pages.length + 1);  // Salva relação
-      this.hashIndex.storeInBucket(word, this.pages.length + 1);  // Adiciona ao índice
+       this.saveWordPageRelation(word, this.pages.length + 1);  // Salva relação
+      // const {collision, overflow} = this.hashIndex.storeInBucket(word, this.pages.length + 1);  // Adiciona ao índice
+      // this.numCollisions += collision;
+      // this.numOverflows += overflow;
     });
   
     // Última página, caso haja palavras restantes
     if (currentPage.length > 0) {
       this.pages.push(new Page(this.pages.length + 1, currentPage));
       // Também salva a relação e o índice para a última página
-      currentPage.forEach(word => {
-        this.saveWordPageRelation(word, this.pages.length);
-        this.hashIndex.storeInBucket(word, this.pages.length);
-      });
+       currentPage.forEach(word => {
+         this.saveWordPageRelation(word, this.pages.length);
+      //   const {collision, overflow} = this.hashIndex.storeInBucket(word, this.pages.length);
+      //   this.numCollisions += collision;
+      //   this.numOverflows += overflow;
+       });
     }
   
     // console.log(`Páginas carregadas: ${this.pages.length}`);
@@ -115,7 +122,9 @@ class IndexManager {
   buildIndex(): void {
     this.pages.forEach(page => {
       page.words.forEach(word => {
-        this.hashIndex.storeInBucket(word, page.pageNumber); // Usando o novo método de armazenamento com Bucket
+        const {collision, overflow} = this.hashIndex.storeInBucket(word, page.pageNumber);
+        this.numCollisions += collision;
+        this.numOverflows += overflow
       });
     });
   }
