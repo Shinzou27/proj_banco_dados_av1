@@ -5,6 +5,8 @@ import './App.css'
 import Section from './components/Section'
 import Warning from './components/Warning'
 import Loading from './components/Loading'
+import api from './services/api';
+
 
 function App() {
   const [pageSize, setPageSize] = useState();
@@ -19,6 +21,16 @@ function App() {
       }, 2000);
     }
   }, [loading])
+  const handleRequest = () => {
+    setKeySet(true);
+    const toPost = {
+      pageSize: pageSize,
+      key: key
+    }
+    api.get('/', {
+      data: toPost
+    }).then((res) => console.log(res.data))
+  }
   return (
     <div className='size-full flex'>
       <Section bg={'bg-gray-700'}>
@@ -30,7 +42,7 @@ function App() {
         <h1 className='text-center mx-4'>Busca por uma chave específica</h1>
         <input disabled={!pageSizeSet} onChange={(e) => setKey(e.target.value)} value={key} className='disabled:bg-gray-400 w-96 h-16 mt-auto text-gray-500 bg-gray-200 focus:outline-none rounded-md px-4 box-border' type="text" name="key" placeholder='Insira a chave de busca...' />
         <Warning condition={key == "" && !pageSizeSet} label={"Preencha a quantidade de páginas primeiro!"} />
-        <button disabled={key == ""} onClick={() => setKeySet(true)} className='w-64 mt-auto mb-16 h-16 bg-gray-500 rounded-xl hover:bg-gray-800 disabled:opacity-40'>Buscar</button>
+        <button disabled={key == ""} onClick={handleRequest} className='w-64 mt-auto mb-16 h-16 bg-gray-500 rounded-xl hover:bg-gray-800 disabled:opacity-40'>Buscar</button>
       </Section>
       <Section bg={'bg-gray-900'}>
         <div className='mb-auto'>
