@@ -1,7 +1,11 @@
 import express from "express";
 import { main } from "./main";
+import cors from 'cors'
 
 const app = express();
+
+app.use(cors())
+
 const PORT = 3000;
 
 app.get("/", async(req, res) => {
