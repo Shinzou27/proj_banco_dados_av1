@@ -3,7 +3,10 @@ import { IndexManager } from "./classes/IndexManager";
 
 async function main(pageSize: number, searchWord?: string) {
   const bucketSize = 42;
-  const amountBuckets = Math.ceil(466000 / bucketSize); //consertar pra calcular com o tamanho do arquivo sozinho
+
+  const data = await IndexManager.loadFileData();
+
+  const amountBuckets = Math.ceil(data.length / bucketSize);
 
   const indexManager = new IndexManager(
     path.join("src", "public", "words.txt"),
@@ -12,14 +15,14 @@ async function main(pageSize: number, searchWord?: string) {
     bucketSize
   );
 
-  await indexManager.loadFile();
+  await indexManager.loadFile(data);
 
   indexManager.buildIndex();
 
   const { firstPage, lastPage } = indexManager.getFirstAndLastPage();
 
-  const collisionRate = (indexManager.numCollisions / 466000) * 100;
-  const overflowRate = (indexManager.numOverflows / 466000) * 100;
+  const collisionRate = (indexManager.numCollisions / data.length) * 100;
+  const overflowRate = (indexManager.numOverflows / data.length) * 100;
 
   //indexManager.displayIndex();
 
