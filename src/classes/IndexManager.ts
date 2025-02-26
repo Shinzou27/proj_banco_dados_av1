@@ -80,6 +80,16 @@ class IndexManager {
      }
   }
 
+  indexSearch(searchWord: string): { pageFound: number | undefined, pagesScanned: number, timeElapsed: number, pageContent: string[] } {
+    const startTime = performance.now();
+    const pageFound = this.hashIndex.findPage(searchWord);
+    const endTime = performance.now();
+    const timeElapsed = endTime - startTime;
+    const pageContent = pageFound ? this.pages[pageFound - 1].words : [];
+
+    return { pageFound, pagesScanned: 1, timeElapsed, pageContent };
+  }
+
   tableScan(searchWord: string): { 
     pageFound: number | null, 
     pagesScanned: number, 
@@ -108,7 +118,7 @@ class IndexManager {
         pageFound, 
         pagesScanned, 
         timeElapsed, 
-        pagesRead
+        pagesRead,
     };
   }
 

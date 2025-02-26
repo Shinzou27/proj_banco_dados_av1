@@ -34,6 +34,17 @@ class HashIndex {
     }
   }
 
+  findPage(key: string): number | undefined {
+    const hashValue = this.hash(key);
+    const bucket = this.buckets.get(hashValue);
+
+    if (bucket) {
+      return bucket.getPage(key);
+    } else {
+      console.log(`Bucket não encontrado para a chave ${key}`);
+    }
+  }
+
   displayBuckets(): void {
     this.buckets.forEach((bucket, key) => {
       // console.log(`Bucket ${key}:`);

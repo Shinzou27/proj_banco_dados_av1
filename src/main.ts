@@ -23,8 +23,10 @@ async function main(pageSize: number, searchWord?: string) {
 
   //indexManager.displayIndex();
 
+  const indexSearchResult = searchWord ? indexManager.indexSearch(searchWord!) : null;
+
   // Logica table scan
-  let tableScanResult = searchWord ? indexManager.tableScan(searchWord!) : null;
+  const tableScanResult = searchWord ? indexManager.tableScan(searchWord!) : null;
   console.log(`Resultado do Table Scan:`, tableScanResult);
 
   return {
@@ -32,6 +34,7 @@ async function main(pageSize: number, searchWord?: string) {
     lastPage: lastPage ? { pageNumber: lastPage.pageNumber, content: lastPage.words } : null,
     collisionRate,
     overflowRate,
+    indexSearchResult,
     tableScanResult,
   };
 }
