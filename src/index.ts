@@ -8,18 +8,22 @@ app.use(cors())
 
 const PORT = 3000;
 
-app.get("/", async(req, res) => {
-    try{
-        const pageSize = req.query.pageSize as string
-        const searchWord = req.query.searchWord as string
-        const result = await main(Number(pageSize || 10), searchWord)
+app.get("/", async (req, res) => {
+  let toSend;
+  let status;
+  try {
+    const pageSize = req.query.pageSize as string
+    const searchWord = req.query.searchWord as string
 
-        res.send(result)
-    }catch(err){
-        console.log(err)
-        res.status(500).send("Erro Interno")
-    }
-  res.send();
+    const result = await main(Number(pageSize || 10), searchWord)
+    toSend = result
+    status = 200;
+  } catch (err) {
+    console.log(err)
+    toSend = "Erro Interno"
+    status = 500;
+  }
+  res.status(status).send(toSend);
 });
 
 app.listen(PORT, () => {
