@@ -93,17 +93,14 @@ class IndexManager {
   tableScan(searchWord: string): { 
     pageFound: number | null, 
     pagesScanned: number, 
-    pagesRead: { pageNumber: number, content: string[] }[], 
     timeElapsed: number 
   } {
     const startTime = performance.now();
     let pagesScanned = 0;
-    let pagesRead: { pageNumber: number, content: string[] }[] = [];
     let pageFound: number | null = null;
 
     for (const page of this.pages) {
         pagesScanned++;
-        pagesRead.push({ pageNumber: page.pageNumber, content: page.words });
 
         if (page.words.includes(searchWord)) {
             pageFound = page.pageNumber;
@@ -118,7 +115,6 @@ class IndexManager {
         pageFound, 
         pagesScanned, 
         timeElapsed, 
-        pagesRead,
     };
   }
 
