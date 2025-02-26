@@ -43,3 +43,26 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+
+.page-scrollbar {
+  overflow: auto; /* Garante que a rolagem seja ativada quando necessário */
+}
+
+.page-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.page-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.page-scrollbar::-webkit-scrollbar-thumb {
+  background: #a8a8a8;
+  border-radius: 3px;
+}
+
+.page-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
